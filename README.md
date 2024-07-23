@@ -1,2 +1,1 @@
-# uranium-launcher
-CLI Minecraft Launcher.
+# not ready yet 🐥
