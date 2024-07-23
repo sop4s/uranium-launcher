@@ -11,3 +11,8 @@ int read_line(char *buf) {
   printf(FG_RESET);
   return 0;
 }
+int read_int(int *num) {
+  char buf[8];
+  if (read_line(buf) != 0) return 1;
+  return sscanf(buf, "%d", num);
+}

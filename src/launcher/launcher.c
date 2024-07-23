@@ -6,11 +6,11 @@ int get_command(
     LaunchOptions* opts, 
     MinecraftPath minecraft_dir, 
     MinecraftVersion version) {
-  MinecraftArguments args = "";
-  snprintf(cmd, COMMAND_MAX, "%s %s %s %s", 
-  "/home/sopas/.minecraft/runtime/jre-legacy/linux/jre-legacy/bin/java",
-  "-Xmx2G -jar /home/sopas/.minecraft/versions/1.12.2/1.12.2.jar",
-  "-username", opts->username);
+  MinecraftArguments args;
+  
+  snprintf(cmd, COMMAND_MAX, "%s%s", 
+    minecraft_dir, 
+    "runtime/jre-legacy/linux/jre-legacy/bin/java -version");
   return 0;
 }
 

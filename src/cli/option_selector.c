@@ -4,12 +4,13 @@
 #include "option_selector.h"
 #include "colors.h"
 #include "../config.h"
+#include "input.h"
 
-int init_option_selector(OptionSelector *selector) {
+int selector_init(OptionSelector *selector) {
   selector->opt_head = NULL;
   return 0;
 }
-int add_option(OptionSelector *selector, const char *option) {
+int selector_add(OptionSelector *selector, const char *option) {
   SelectorNode *new_node = malloc(sizeof(SelectorNode));
   if (new_node == NULL) {
     fprintf(stderr, "malloc error\n");
@@ -29,16 +30,28 @@ int add_option(OptionSelector *selector, const char *option) {
   }
   return 0;
 }
-int wait_selection(OptionSelector *selector, char *option) {
+int selector_select(OptionSelector *selector, char *option) {
   SelectorNode *current = selector->opt_head;
-  SelectorNode* next;
+  int selection = 0;
+
   int i = 0;
   while (current != NULL) {
     printf("[" FG_MAIN "%d" FG_RESET "] %s\n", i, current->data);
     current = current->next;
     i++;
   }
-  printf("Select an option: ");
-  getchar();
-  return 0;
+  printf("> ");
+  read_int(&selection);
+  current = selector->opt_head;
+  i = 0;
+  while (current != NULL) {
+    if (selection == i) {
+      strncpy(option, current->data, SELECTOR_OPTION_MAX);
+      return 0;
+    }
+    current = current->next;
+    i++;
+  }
+  fprintf(stderr, "index out of range\n");
+  return 1;
 }

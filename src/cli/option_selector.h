@@ -12,7 +12,7 @@ typedef struct SelectorNode SelectorNode;
 typedef struct {
   SelectorNode *opt_head;
 } OptionSelector;
-int init_option_selector(OptionSelector *selector);
-int add_option(OptionSelector *selector, const char *option);
-int wait_selection(OptionSelector *selector, char *option);
+int selector_init(OptionSelector *selector);
+int selector_add(OptionSelector *selector, const char *option);
+int selector_select(OptionSelector *selector, char *option);
 #endif // !OPTION_SELECTOR_H

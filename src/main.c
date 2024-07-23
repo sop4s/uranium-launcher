@@ -19,51 +19,48 @@ void ctrl_c(int s) {
 int versions_to_selector(OptionSelector* selector) {
   DIR *d;
   MinecraftPath minecraft_dir;
+  struct dirent *dir;
+  
   get_minecraft_dir(minecraft_dir);
   strncat(minecraft_dir, "/versions/", strlen(minecraft_dir) + 10);
-  struct dirent *dir;
   d = opendir(minecraft_dir);
-  if (d) {
-    while ((dir = readdir(d)) != NULL) {
-      if (dir->d_name[0] != '.') {
-        add_option(selector, dir->d_name);
-      }
-    }
-    closedir(d);
+  
+  if (!d) return 1; 
+  while ((dir = readdir(d)) != NULL) {
+    if (dir->d_name[0] != '.')
+      selector_add(selector, dir->d_name);
   }
+  closedir(d);
   return 0;
 }
 int main() {
-  signal(SIGINT, ctrl_c);
-
-  printf(FG_MAIN BANNER FG_RESET);
-  
   LaunchOptions options;
-  
-  char username[USERNAME_MAX];
-  printf("Enter your username: ");
-  read_line(options.username);
   
   LaunchCommand cmd;
   MinecraftVersion version = "1.12.2";
   MinecraftPath minecraft_dir; 
-  
+
   OptionSelector selector;
-  init_option_selector(&selector);
+
+  signal(SIGINT, ctrl_c);
+  printf(FG_MAIN BANNER FG_RESET);
+
+  printf("Enter your username: ");
+  read_line(options.username);
+  
+  selector_init(&selector);
   versions_to_selector(&selector);
- 
+
   printf("Select your version:\n");
-  char* selection;
-  wait_selection(&selector, selection);
+  if (selector_select(&selector, version) != 0) return 1;
 
   get_minecraft_dir(minecraft_dir);
-  printf("minecraft_dir: " FG_MAIN "%s\n" FG_RESET, minecraft_dir);
-  
   get_command(cmd, &options, minecraft_dir, version);
 
-  printf("options.username: " FG_MAIN "%s" FG_RESET "\n", options.username);
-  printf("cmd: " FG_MAIN "%s" FG_RESET "\n", cmd);
-  printf("\nStarting minecraft: " FG_MAIN);
+  printf("Version: " FG_MAIN "%s" FG_RESET "\n", version);
+  printf("Command: " FG_MAIN "%s" FG_RESET "\n", cmd);
+  printf("Starting minecraft: " FG_MAIN);
+  
   fflush(stdout);
   int exitcode = system(cmd);
   printf(FG_RESET);
