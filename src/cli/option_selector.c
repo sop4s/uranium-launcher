@@ -34,24 +34,21 @@ int selector_select(OptionSelector *selector, char *option) {
   SelectorNode *current = selector->opt_head;
   int selection = 0;
 
-  int i = 0;
-  while (current != NULL) {
+  for (int i = 0; current != NULL; i++) {
     printf("[" FG_MAIN "%d" FG_RESET "] %s\n", i, current->data);
     current = current->next;
-    i++;
   }
   printf("> ");
   read_int(&selection);
   current = selector->opt_head;
-  i = 0;
-  while (current != NULL) {
+  
+  for (int i = 0; current != NULL; i++) {
     if (selection == i) {
       strncpy(option, current->data, SELECTOR_OPTION_MAX);
       return 0;
     }
     current = current->next;
-    i++;
   }
-  fprintf(stderr, "index out of range\n");
+  //fprintf(stderr, ERROR "Invalid option: out of range\n");
   return 1;
 }

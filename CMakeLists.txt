@@ -8,6 +8,7 @@ set(SOURCES
   src/main.c
   src/launcher/launcher.c
   src/launcher/utils.c
+  src/launcher/logs.c
   src/cli/option_selector.c
   src/cli/input.c
 )

@@ -9,11 +9,13 @@
 #include "cli/colors.h"
 #include "launcher/constants.h"
 #include "launcher/launcher.h"
+#include "launcher/logs.h"
 #include "launcher/utils.h"
 #include "config.h"
 
 void ctrl_c(int s) {
-  printf("\nClosing\n");
+  printf("\n");
+  log_info("Closing game\n");
   exit(0);
 }
 int versions_to_selector(OptionSelector* selector) {
@@ -35,15 +37,14 @@ int versions_to_selector(OptionSelector* selector) {
 }
 int main() {
   LaunchOptions options;
-  
   LaunchCommand cmd;
-  MinecraftVersion version = "1.12.2";
+  MinecraftVersion version;
   MinecraftPath minecraft_dir; 
 
   OptionSelector selector;
-
+  
   signal(SIGINT, ctrl_c);
-  printf(FG_MAIN BANNER FG_RESET);
+  printf(BANNER);
 
   printf("Enter your username: ");
   read_line(options.username);
@@ -57,13 +58,13 @@ int main() {
   get_minecraft_dir(minecraft_dir);
   get_command(cmd, &options, minecraft_dir, version);
 
-  printf("Version: " FG_MAIN "%s" FG_RESET "\n", version);
-  printf("Command: " FG_MAIN "%s" FG_RESET "\n", cmd);
+  printf("Version: " FG_MAIN "%s\n" FG_RESET, version);
+  printf("Command: " FG_MAIN "%s\n" FG_RESET, cmd);
   printf("Starting minecraft: " FG_MAIN);
   
   fflush(stdout);
   int exitcode = system(cmd);
   printf(FG_RESET);
-  printf("Minecraft closed with code: " FG_MAIN "%d" FG_RESET "\n", exitcode);
+  printf("Minecraft closed with code " FG_MAIN "%d\n" FG_RESET, exitcode);
   return exitcode;
 }
